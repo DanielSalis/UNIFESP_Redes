@@ -6,7 +6,7 @@
 `gcc -Wall -pthread  -o file-server file-server.c` 
 
 ###  2 - Executando
-`./file-server`
+`./file-server <porta>`
 
 ## No cliente (métodos)
 ### 1 - GET
