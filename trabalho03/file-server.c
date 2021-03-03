@@ -84,10 +84,10 @@ void send_file(int sockfd, req_t r)
 
 void create_file(int sockfd, req_t r)
 {
-    int fd = open(r.filename, O_RDONLY, S_IRUSR);
+    int fd = open(r.filename, O_RDWR, S_IRUSR);
     if (fd == -1)
     {
-        fd = open(r.filename, O_WRONLY | O_CREAT, S_IRUSR);
+        fd = open(r.filename, O_RDWR | O_CREAT , S_IWRITE | S_IREAD);
         close(fd);
         return;
     }
@@ -105,7 +105,7 @@ void append_to_file(int sockfd, req_t r)
         return;
     }
 
-    int fd = open(r.filename, O_WRONLY | O_APPEND, S_IRUSR);
+    int fd = open(r.filename, O_RDWR | O_APPEND, 0600);
     if (fd == -1)
     {
         perror("append");
@@ -114,14 +114,15 @@ void append_to_file(int sockfd, req_t r)
         return;
     }
 
-    write(fd, &r.text, strlen(r.text));
+    int result = write(fd, &r.text, strlen(r.text));
+    printf("\nRESULT: %d\n", result);
     close(fd);
     return;
 }
 
 void remove_file(int sockfd, req_t r)
 {
-    int fd = open(r.filename, O_WRONLY | O_TRUNC, S_IRUSR);
+    int fd = remove(r.filename);
     if (fd == -1)
     {
         perror("remove");
