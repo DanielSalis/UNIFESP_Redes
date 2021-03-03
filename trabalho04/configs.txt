@@ -1,0 +1,45 @@
+para iniciar a simulacao: lstart
+para encerrar: lcrash
+
+acessar /etc/quagga em cada roteador para configurar:
+
+1- daemons
+ 
+zebra e ospfd devem ser "yes"
+
+2- criar "zebra.conf"
+
+hostname zebra
+password root
+enable password root
+
+3- criar "ospfd.conf"
+
+hostname R1
+password root
+enable password root
+interface eth0
+ ip ospf cost 10
+interface eth1
+ ip ospf cost 10
+interface eth2
+ ip ospf cost 40
+interface eth3
+ ip ospf cost 60
+router ospf
+ network 192.168.1.0/24 area 0
+ network 10.0.0.0/30 area 0
+ network 10.0.0.4/30 area 0
+ network 10.0.0.8/30 area 0
+log file /var/log/quagga/ospfd.log
+
+4- para startar: /etc/init.d/quagga start 
+
+5- para conferir se deu certo: ps -aux
+
+6- para ver tabela de roteamento: route
+
+7- conferir o caminho que será feito: traceroute <IP>
+
+8- exportar config de cada roteador, para isso cada pasta do roteador deve ter /etc/quagga
+ cp * /hostlab/R1/etc/quagga
